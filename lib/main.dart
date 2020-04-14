@@ -71,7 +71,7 @@ class _MyHomePageState extends State<MyHomePage>
 
     _animationController = new AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 10),
+      duration: const Duration(seconds: 4),
     );
 
     _pageController = new PageController(initialPage: 0, viewportFraction: 0.8);
@@ -185,24 +185,34 @@ class _MyHomePageState extends State<MyHomePage>
               setState(() {
                 _pageScrolled = true;
                 this.currentPage = currentPage;
+                print("-------- LOG BEGIN-------");
+                print("_pageController");
+                print(_pageController.page);
+
+                print("-------- currentPage -------");
+                print(currentPage);
+
+                print("-------- LOG END -------");
               });
             },
             itemBuilder: (context, index) => AnimatedBuilder(
               animation: _animationController,
               child: _movieItem(context, cinets[index]),
               builder: (context, child) {
-                if (_pageScrolled) {
-                  print(_pageController.page);
-                }
+                if (_pageScrolled) {}
                 //print(_pageController.page);
-
+                var addedHeight = 100 *
+                    ((_pageScrolled && currentPage == index) ||
+                            (currentPage == 0 && currentPage == index)
+                        ? 1
+                        : 0);
                 return Align(
                   alignment: Alignment.bottomCenter,
                   child: Container(
                     margin: EdgeInsets.symmetric(horizontal: 10),
                     width: 3 * MediaQuery.of(context).size.width / 4,
                     height: 3 * MediaQuery.of(context).size.height / 4 +
-                        100 * (currentPage == index ? 1 : 0),
+                        addedHeight,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.all(
