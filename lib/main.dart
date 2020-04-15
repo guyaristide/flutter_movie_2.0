@@ -74,7 +74,7 @@ class _MyHomePageState extends State<MyHomePage>
       duration: const Duration(seconds: 4),
     );
 
-    _pageController = new PageController(initialPage: 0, viewportFraction: 0.8);
+    _pageController = new PageController(initialPage: currentPage , viewportFraction: 0.8);
     cinets.add(new Cinet(
         "Joker",
         [
@@ -185,34 +185,25 @@ class _MyHomePageState extends State<MyHomePage>
               setState(() {
                 _pageScrolled = true;
                 this.currentPage = currentPage;
-                print("-------- LOG BEGIN-------");
-                print("_pageController");
-                print(_pageController.page);
-
-                print("-------- currentPage -------");
-                print(currentPage);
-
-                print("-------- LOG END -------");
               });
             },
             itemBuilder: (context, index) => AnimatedBuilder(
-              animation: _animationController,
+              animation: _pageController,
               child: _movieItem(context, cinets[index]),
               builder: (context, child) {
-                if (_pageScrolled) {}
-                //print(_pageController.page);
-                var addedHeight = 100 *
-                    ((_pageScrolled && currentPage == index) ||
-                            (currentPage == 0 && currentPage == index)
-                        ? 1
-                        : 0);
+
+                var result = _pageScrolled ? _pageController.page : currentPage * 1.0;
+
+                // The horizontal position of the page between a 1 and 0
+                var value = result - index;
+                value = (1 - (value.abs() * .5)).clamp(0.0, 1.0) as double;
+
                 return Align(
                   alignment: Alignment.bottomCenter,
                   child: Container(
                     margin: EdgeInsets.symmetric(horizontal: 10),
                     width: 3 * MediaQuery.of(context).size.width / 4,
-                    height: 3 * MediaQuery.of(context).size.height / 4 +
-                        addedHeight,
+                    height: 3 * MediaQuery.of(context).size.height / 4 + (100 * value),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.all(
