@@ -57,16 +57,26 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Cinet> cinets = [];
 
   PageController _pageController;
+  PageController _backgroundController;
 
   int currentPage = 0;
 
   bool _pageScrolled = false;
 
+  _onMainScroll() {
+    _backgroundController.animateTo(_pageController.offset,
+        duration: Duration(milliseconds: 50), curve: Curves.linear);
+  }
+
   @override
   void initState() {
     // TODO: implement initState
 
-    _pageController = new PageController(initialPage: 0, viewportFraction: 0.8);
+    _pageController = new PageController(initialPage: 0, viewportFraction: 0.8)
+      ..addListener(_onMainScroll);
+    _backgroundController =
+        new PageController(initialPage: 0, viewportFraction: 1);
+
     cinets.add(new Cinet(
         "Joker",
         [
@@ -120,20 +130,25 @@ class _MyHomePageState extends State<MyHomePage> {
             left: 0,
             right: 0,
             bottom: 0,
-            child: Container(
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [Colors.black, Colors.white],
+            child: PageView.builder(
+              controller: _backgroundController,
+              itemBuilder: (context, index) => AnimatedBuilder(
+                animation: _pageController,
+                child: Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: NetworkImage(
+                        "${cinets[index].cover}",
+                      ),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
-                image: DecorationImage(
-                  image: NetworkImage("${cinets[currentPage].cover}"),
-                  fit: BoxFit.cover,
-                ),
+                builder: (BuildContext context, Widget child) {
+                  return child;
+                },
               ),
+              itemCount: cinets.length,
             ),
           ),
           Positioned(
@@ -145,11 +160,12 @@ class _MyHomePageState extends State<MyHomePage> {
               height: MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width,
               decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Colors.black.withOpacity(0), Colors.white],
-              )),
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Colors.black.withOpacity(0), Colors.white],
+                ),
+              ),
             ),
           ),
           Positioned(
@@ -333,5 +349,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void dispose() {
     super.dispose();
+    _pageController.dispose();
+    _backgroundController.dispose();
   }
 }
