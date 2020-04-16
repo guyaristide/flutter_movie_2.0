@@ -64,8 +64,10 @@ class _MyHomePageState extends State<MyHomePage> {
   bool _pageScrolled = false;
 
   _onMainScroll() {
-    _backgroundController.animateTo(_pageController.offset,
-        duration: Duration(milliseconds: 50), curve: Curves.linear);
+    debugPrint("_pageController.offset");
+    debugPrint("${_pageController.offset}");
+    _backgroundController.animateTo(_pageController.offset / 0.8,
+        duration: Duration(milliseconds: 1), curve: Curves.decelerate);
   }
 
   @override
