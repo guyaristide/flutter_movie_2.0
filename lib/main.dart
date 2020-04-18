@@ -53,28 +53,32 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage>
-    with SingleTickerProviderStateMixin {
-  AnimationController _animationController;
-
+class _MyHomePageState extends State<MyHomePage> {
   List<Cinet> cinets = [];
 
   PageController _pageController;
+  PageController _backgroundController;
 
   int currentPage = 0;
 
   bool _pageScrolled = false;
 
+  _onMainScroll() {
+    debugPrint("_pageController.offset");
+    debugPrint("${_pageController.offset}");
+    _backgroundController.animateTo(_pageController.offset / 0.8,
+        duration: Duration(milliseconds: 1), curve: Curves.decelerate);
+  }
+
   @override
   void initState() {
     // TODO: implement initState
 
-    _animationController = new AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 4),
-    );
+    _pageController = new PageController(initialPage: 0, viewportFraction: 0.8)
+      ..addListener(_onMainScroll);
+    _backgroundController =
+        new PageController(initialPage: 0, viewportFraction: 1);
 
-    _pageController = new PageController(initialPage: currentPage , viewportFraction: 0.8);
     cinets.add(new Cinet(
         "Joker",
         [
@@ -128,20 +132,25 @@ class _MyHomePageState extends State<MyHomePage>
             left: 0,
             right: 0,
             bottom: 0,
-            child: Container(
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [Colors.black, Colors.white],
+            child: PageView.builder(
+              controller: _backgroundController,
+              itemBuilder: (context, index) => AnimatedBuilder(
+                animation: _pageController,
+                child: Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: NetworkImage(
+                        "${cinets[index].cover}",
+                      ),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
-                image: DecorationImage(
-                  image: NetworkImage("${cinets[currentPage].cover}"),
-                  fit: BoxFit.cover,
-                ),
+                builder: (BuildContext context, Widget child) {
+                  return child;
+                },
               ),
+              itemCount: cinets.length,
             ),
           ),
           Positioned(
@@ -153,11 +162,12 @@ class _MyHomePageState extends State<MyHomePage>
               height: MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width,
               decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Colors.black.withOpacity(0), Colors.white],
-              )),
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Colors.black.withOpacity(0), Colors.white],
+                ),
+              ),
             ),
           ),
           Positioned(
@@ -191,27 +201,37 @@ class _MyHomePageState extends State<MyHomePage>
               animation: _pageController,
               child: _movieItem(context, cinets[index]),
               builder: (context, child) {
+                if (_pageScrolled) {}
+                //print(_pageController.page);
+                var result =
+                    _pageScrolled ? _pageController.page : currentPage * 1.0;
+                /* var value = ((_pageScrolled && currentPage == index) ||
+                        (currentPage == 0 && currentPage == index)
+                    ? 1.0
+                    : 0.0) as double;*/
 
-                var result = _pageScrolled ? _pageController.page : currentPage * 1.0;
-
-                // The horizontal position of the page between a 1 and 0
                 var value = result - index;
                 value = (1 - (value.abs() * .5)).clamp(0.0, 1.0) as double;
 
+                double addedHeight = 100.0;
+                //setState(() {});
                 return Align(
                   alignment: Alignment.bottomCenter,
-                  child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 10),
+                  child: SizedBox(
                     width: 3 * MediaQuery.of(context).size.width / 4,
-                    height: 3 * MediaQuery.of(context).size.height / 4 + (100 * value),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(50),
+                    height: (Curves.easeOut.transform(value) * addedHeight) +
+                        4 * MediaQuery.of(context).size.height / 6,
+                    child: Container(
+                      margin: EdgeInsets.symmetric(horizontal: 10),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(50),
+                        ),
                       ),
+                      padding: EdgeInsets.all(20),
+                      child: child,
                     ),
-                    padding: EdgeInsets.all(20),
-                    child: child,
                   ),
                 );
               },
@@ -330,7 +350,8 @@ class _MyHomePageState extends State<MyHomePage>
 
   @override
   void dispose() {
-    _animationController.dispose();
     super.dispose();
+    _pageController.dispose();
+    _backgroundController.dispose();
   }
 }
