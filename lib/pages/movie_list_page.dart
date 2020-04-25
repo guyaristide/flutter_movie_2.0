@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutteranimationssample/main.dart';
 import 'package:flutteranimationssample/models/movie.dart';
+import 'package:flutteranimationssample/pages/movie_detail_page.dart';
 
 class MovieListPage extends StatefulWidget {
   @override
@@ -31,20 +32,20 @@ class _MovieListPageState extends State<MovieListPage> {
 
     movies = [
       new Movie(
-          "Joker",
-          [
-            "Action",
-            "Drame",
-          ],
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQ0aWlrS1smAlmWpLaFXpkT599hW_320r6Uw4sKQxdnSckOYE0u&usqp=CAU",
-          9),
-      new Movie(
           "BAD BOY",
           [
             "Action",
             "Drame",
           ],
           "https://fr.web.img6.acsta.net/pictures/19/11/22/09/44/3027567.jpg",
+          9),
+      new Movie(
+          "Joker",
+          [
+            "Action",
+            "Drame",
+          ],
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQ0aWlrS1smAlmWpLaFXpkT599hW_320r6Uw4sKQxdnSckOYE0u&usqp=CAU",
           9),
       new Movie(
           "The girl next door",
@@ -54,14 +55,14 @@ class _MovieListPageState extends State<MovieListPage> {
           ],
           "https://www.1zoom.me/big2/59/157358-frederika.jpg",
           9),
-      new Movie(
+      /*new Movie(
           "Joker",
           [
             "Action",
             "Drame",
           ],
           "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQ0aWlrS1smAlmWpLaFXpkT599hW_320r6Uw4sKQxdnSckOYE0u&usqp=CAU",
-          9),
+          9),*/
     ];
     super.initState();
   }
@@ -154,16 +155,21 @@ class _MovieListPageState extends State<MovieListPage> {
                     width: 3 * MediaQuery.of(context).size.width / 4,
                     height: (Curves.easeOut.transform(value) * addedHeight) +
                         4 * MediaQuery.of(context).size.height / 6,
-                    child: Container(
-                      margin: EdgeInsets.symmetric(horizontal: 10),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(50),
-                            topLeft: Radius.circular(50)),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => MovieDetailPage()));
+                      },
+                      child: Container(
+                        margin: EdgeInsets.symmetric(horizontal: 10),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(50),
+                              topLeft: Radius.circular(50)),
+                        ),
+                        padding: EdgeInsets.all(20),
+                        child: child,
                       ),
-                      padding: EdgeInsets.all(20),
-                      child: child,
                     ),
                   ),
                 );
