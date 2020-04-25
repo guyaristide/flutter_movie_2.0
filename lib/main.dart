@@ -60,12 +60,21 @@ class _MyHomePageState extends State<MyHomePage> {
   PageController _backgroundController;
 
   int currentPage = 0;
+  int previousPage = 0;
 
   bool _pageScrolled = false;
 
   _onMainScroll() {
     debugPrint("_pageController.offset");
     debugPrint("${_pageController.offset}");
+
+    if (currentPage < _pageController.page) {
+      previousPage = currentPage + 1;
+    } else if (currentPage == _pageController.page) {
+      previousPage = currentPage;
+    } else {
+      previousPage = currentPage - 1;
+    }
     _backgroundController.animateTo(_pageController.offset / 0.8,
         duration: Duration(milliseconds: 1), curve: Curves.decelerate);
   }
@@ -127,46 +136,45 @@ class _MyHomePageState extends State<MyHomePage> {
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
         children: <Widget>[
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: PageView.builder(
-              controller: _backgroundController,
-              itemBuilder: (context, index) => AnimatedBuilder(
-                animation: _pageController,
-                child: Container(
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: NetworkImage(
-                        "${cinets[index].cover}",
-                      ),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                builder: (BuildContext context, Widget child) {
-                  return child;
-                },
+          Container(
+            height: double.infinity,
+            width: double.infinity,
+            decoration: BoxDecoration(
+                image: DecorationImage(
+              image: NetworkImage(
+                cinets[previousPage].cover,
               ),
-              itemCount: cinets.length,
+              fit: BoxFit.cover,
+            )),
+          ),
+          Transform(
+            transform: Matrix4.diagonal3Values(
+              _pageScrolled
+                  ? _pageController.page
+                  : -MediaQuery.of(context).size.width,
+              0,
+              0,
+            ),
+            child: Container(
+              height: double.infinity,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                image: NetworkImage(
+                  cinets[currentPage].cover,
+                ),
+                fit: BoxFit.cover,
+              )),
             ),
           ),
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: Container(
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [Colors.black.withOpacity(0), Colors.white],
-                ),
+          Container(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Colors.black.withOpacity(0), Colors.white],
               ),
             ),
           ),
@@ -355,3 +363,25 @@ class _MyHomePageState extends State<MyHomePage> {
     _backgroundController.dispose();
   }
 }
+
+/*PageView.builder(
+            reverse: true,
+            controller: _backgroundController,
+            itemBuilder: (context, index) => AnimatedBuilder(
+              animation: _pageController,
+              child: Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: NetworkImage(
+                      "${cinets[index].cover}",
+                    ),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              builder: (BuildContext context, Widget child) {
+                return child;
+              },
+            ),
+            itemCount: cinets.length,
+          ),*/
