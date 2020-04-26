@@ -43,13 +43,16 @@ class _MovieListPageState extends State<MovieListPage> {
             controller: _backgroundController,
             itemBuilder: (context, index) => AnimatedBuilder(
               animation: _backgroundController,
-              child: Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: NetworkImage(
-                      "${movies[index].cover}",
+              child: Hero(
+                tag: "${movies[index].title}",
+                child: Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: NetworkImage(
+                        "${movies[index].cover}",
+                      ),
+                      fit: BoxFit.cover,
                     ),
-                    fit: BoxFit.cover,
                   ),
                 ),
               ),
@@ -170,49 +173,52 @@ class _MovieListPageState extends State<MovieListPage> {
   Column _movieItem(BuildContext context, Movie movie) {
     return Column(
       children: <Widget>[
-        Hero(
-          tag: "${movie.title}",
-          child: Container(
-            width: 3 * MediaQuery.of(context).size.width / 4,
-            height: 3 * MediaQuery.of(context).size.width / 4,
-            decoration: BoxDecoration(
-              color: Colors.black,
-              borderRadius: BorderRadius.all(
-                Radius.circular(50),
-              ),
-              image: DecorationImage(
-                image: NetworkImage("${movie.cover}"),
-                fit: BoxFit.cover,
-              ),
+        Container(
+          width: 3 * MediaQuery.of(context).size.width / 4,
+          height: 3 * MediaQuery.of(context).size.width / 4,
+          decoration: BoxDecoration(
+            color: Colors.black,
+            borderRadius: BorderRadius.all(
+              Radius.circular(50),
+            ),
+            image: DecorationImage(
+              image: NetworkImage("${movie.cover}"),
+              fit: BoxFit.cover,
             ),
           ),
         ),
         SizedBox(
           height: 20,
         ),
-        Text(
-          "${movie.title}",
-          style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+        Hero(
+          tag: "title-${movie.title}",
+          child: Text(
+            "${movie.title}",
+            style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+          ),
         ),
         SizedBox(
           height: 20,
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            ...movie.genders.map((gender) {
-              return Container(
-                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(40),
+        Hero(
+          tag: "genders-${movie.title}",
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              ...movie.genders.map((gender) {
+                return Container(
+                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(40),
+                    ),
+                    border: Border.all(color: Colors.black54),
                   ),
-                  border: Border.all(color: Colors.black54),
-                ),
-                child: Text("${gender}"),
-              );
-            }).toList()
-          ],
+                  child: Text("${gender}"),
+                );
+              }).toList()
+            ],
+          ),
         ),
         SizedBox(
           height: 20,

@@ -109,51 +109,35 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
-                          Text(
-                            "Joker",
-                            style: TextStyle(
-                                fontSize: 26, fontWeight: FontWeight.bold),
+                          Hero(
+                            tag: "title-${widget.movie.title}",
+                            child: Text(
+                              "${widget.movie.title}",
+                              style: TextStyle(
+                                  fontSize: 26, fontWeight: FontWeight.bold),
+                            ),
                           ),
                           SizedBox(
                             height: 10,
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: <Widget>[
-                              Container(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 15, vertical: 5),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(40),
+                          Hero(
+                            tag: "genders-${widget.movie.title}",
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: widget.movie.genders.map((gender) {
+                                return Container(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 15, vertical: 5),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(40),
+                                    ),
+                                    border: Border.all(color: Colors.black54),
                                   ),
-                                  border: Border.all(color: Colors.black54),
-                                ),
-                                child: Text("Action"),
-                              ),
-                              Container(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 15, vertical: 5),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(40),
-                                  ),
-                                  border: Border.all(color: Colors.black54),
-                                ),
-                                child: Text("Drama"),
-                              ),
-                              Container(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 15, vertical: 5),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(40),
-                                  ),
-                                  border: Border.all(color: Colors.black54),
-                                ),
-                                child: Text("History"),
-                              )
-                            ],
+                                  child: Text("${gender}"),
+                                );
+                              }).toList(),
+                            ),
                           ),
                           SizedBox(
                             height: 10,
