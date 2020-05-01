@@ -48,33 +48,13 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                 children: <Widget>[
                   Align(
                     alignment: Alignment.topLeft,
-                    child: Hero(
-                      tag:
-                          "${widget.movieIndex > 0 ? moviesList[widget.movieIndex - 1].title : moviesList[moviesList.length - 1].title}",
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 50.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10.0)),
-                          child: Image.network(
-                            "${widget.movieIndex > 0 ? moviesList[widget.movieIndex - 1].cover : moviesList[moviesList.length - 1].cover}",
-                            width: 200,
-                            height: 300,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: Hero(
-                      tag:
-                          "${widget.movieIndex < moviesList.length - 1 ? moviesList[widget.movieIndex + 1].title : moviesList[0].title}",
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 50.0),
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 50.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.0)),
                         child: Image.network(
-                          "${widget.movieIndex < moviesList.length - 1 ? moviesList[widget.movieIndex + 1].cover : moviesList[0].cover}",
+                          "${widget.movieIndex > 0 ? moviesList[widget.movieIndex - 1].cover : moviesList[moviesList.length - 1].cover}",
                           width: 200,
                           height: 300,
                           fit: BoxFit.cover,
@@ -83,15 +63,24 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                     ),
                   ),
                   Align(
-                    alignment: Alignment.topCenter,
-                    child: Hero(
-                      tag: "${widget.movie.title}",
+                    alignment: Alignment.topRight,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 50.0),
                       child: Image.network(
-                        "${widget.movie.cover}",
+                        "${widget.movieIndex < moviesList.length - 1 ? moviesList[widget.movieIndex + 1].cover : moviesList[0].cover}",
                         width: 200,
-                        height: 350,
+                        height: 300,
                         fit: BoxFit.cover,
                       ),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: Image.network(
+                      "${widget.movie.cover}",
+                      width: 200,
+                      height: 350,
+                      fit: BoxFit.cover,
                     ),
                   ),
                   Align(
@@ -110,7 +99,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
                           Hero(
-                            tag: "title-${widget.movie.title}",
+                            tag: "tag_${widget.movie.title}",
                             child: Text(
                               "${widget.movie.title}",
                               style: TextStyle(
@@ -120,24 +109,21 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                           SizedBox(
                             height: 10,
                           ),
-                          Hero(
-                            tag: "genders-${widget.movie.title}",
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: widget.movie.genders.map((gender) {
-                                return Container(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 15, vertical: 5),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(40),
-                                    ),
-                                    border: Border.all(color: Colors.black54),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: widget.movie.genders.map((gender) {
+                              return Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 15, vertical: 5),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(40),
                                   ),
-                                  child: Text("${gender}"),
-                                );
-                              }).toList(),
-                            ),
+                                  border: Border.all(color: Colors.black54),
+                                ),
+                                child: Text("${gender}"),
+                              );
+                            }).toList(),
                           ),
                           SizedBox(
                             height: 10,

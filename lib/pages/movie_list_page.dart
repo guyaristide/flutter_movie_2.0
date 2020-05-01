@@ -43,16 +43,13 @@ class _MovieListPageState extends State<MovieListPage> {
             controller: _backgroundController,
             itemBuilder: (context, index) => AnimatedBuilder(
               animation: _backgroundController,
-              child: Hero(
-                tag: "${movies[index].title}",
-                child: Container(
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: NetworkImage(
-                        "${movies[index].cover}",
-                      ),
-                      fit: BoxFit.cover,
+              child: Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: NetworkImage(
+                      "${movies[index].cover}",
                     ),
+                    fit: BoxFit.cover,
                   ),
                 ),
               ),
@@ -191,7 +188,7 @@ class _MovieListPageState extends State<MovieListPage> {
           height: 20,
         ),
         Hero(
-          tag: "title-${movie.title}",
+          tag: "tag_${movie.title}",
           child: Text(
             "${movie.title}",
             style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
@@ -200,25 +197,22 @@ class _MovieListPageState extends State<MovieListPage> {
         SizedBox(
           height: 20,
         ),
-        Hero(
-          tag: "genders-${movie.title}",
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              ...movie.genders.map((gender) {
-                return Container(
-                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(40),
-                    ),
-                    border: Border.all(color: Colors.black54),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            ...movie.genders.map((gender) {
+              return Container(
+                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(40),
                   ),
-                  child: Text("${gender}"),
-                );
-              }).toList()
-            ],
-          ),
+                  border: Border.all(color: Colors.black54),
+                ),
+                child: Text("${gender}"),
+              );
+            }).toList()
+          ],
         ),
         SizedBox(
           height: 20,
