@@ -9,7 +9,7 @@ class MovieListPage extends StatefulWidget {
 }
 
 class _MovieListPageState extends State<MovieListPage> {
-  List<Movie> movies = [];
+  List<Movie> movies = moviesList;
 
   PageController _pageController;
   PageController _backgroundController;
@@ -30,40 +30,6 @@ class _MovieListPageState extends State<MovieListPage> {
     _backgroundController =
         new PageController(initialPage: 0, viewportFraction: 1);
 
-    movies = [
-      new Movie(
-          "BAD BOY",
-          [
-            "Action",
-            "Drame",
-          ],
-          "https://fr.web.img6.acsta.net/pictures/19/11/22/09/44/3027567.jpg",
-          9),
-      new Movie(
-          "Joker",
-          [
-            "Action",
-            "Drame",
-          ],
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQ0aWlrS1smAlmWpLaFXpkT599hW_320r6Uw4sKQxdnSckOYE0u&usqp=CAU",
-          9),
-      new Movie(
-          "The girl next door",
-          [
-            "Romantic",
-            "Commic",
-          ],
-          "https://www.1zoom.me/big2/59/157358-frederika.jpg",
-          9),
-      /*new Movie(
-          "Joker",
-          [
-            "Action",
-            "Drame",
-          ],
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQ0aWlrS1smAlmWpLaFXpkT599hW_320r6Uw4sKQxdnSckOYE0u&usqp=CAU",
-          9),*/
-    ];
     super.initState();
   }
 
@@ -77,13 +43,16 @@ class _MovieListPageState extends State<MovieListPage> {
             controller: _backgroundController,
             itemBuilder: (context, index) => AnimatedBuilder(
               animation: _backgroundController,
-              child: Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: NetworkImage(
-                      "${movies[index].cover}",
+              child: Hero(
+                tag: "${movies[index].title}",
+                child: Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: NetworkImage(
+                        "${movies[index].cover}",
+                      ),
+                      fit: BoxFit.cover,
                     ),
-                    fit: BoxFit.cover,
                   ),
                 ),
               ),
@@ -121,7 +90,7 @@ class _MovieListPageState extends State<MovieListPage> {
                 ),
               ],
             ),
-          ) ,
+          ),
           PageView.builder(
             scrollDirection: Axis.horizontal,
             controller: _pageController,
@@ -157,7 +126,8 @@ class _MovieListPageState extends State<MovieListPage> {
                         4 * MediaQuery.of(context).size.height / 6,
                     child: GestureDetector(
                       onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => MovieDetailPage()));
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => MovieDetailPage(index)));
                       },
                       child: Container(
                         margin: EdgeInsets.symmetric(horizontal: 10),
@@ -220,29 +190,35 @@ class _MovieListPageState extends State<MovieListPage> {
         SizedBox(
           height: 20,
         ),
-        Text(
-          "${movie.title}",
-          style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+        Hero(
+          tag: "title-${movie.title}",
+          child: Text(
+            "${movie.title}",
+            style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+          ),
         ),
         SizedBox(
           height: 20,
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            ...movie.genders.map((gender) {
-              return Container(
-                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(40),
+        Hero(
+          tag: "genders-${movie.title}",
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              ...movie.genders.map((gender) {
+                return Container(
+                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(40),
+                    ),
+                    border: Border.all(color: Colors.black54),
                   ),
-                  border: Border.all(color: Colors.black54),
-                ),
-                child: Text("${gender}"),
-              );
-            }).toList()
-          ],
+                  child: Text("${gender}"),
+                );
+              }).toList()
+            ],
+          ),
         ),
         SizedBox(
           height: 20,
